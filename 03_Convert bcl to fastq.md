@@ -4,17 +4,14 @@ snRNA-seq data is saved in bcl format, to convert it into fastq file format, two
 
 The conversion command is `cellranger mkfastq`. The FASTQ output generated will be the same as when running bcl2fastq directly. Cited from here: [cellranger mkfastq and bcl2fastq2](https://janis.readthedocs.io/en/latest/tools/bioinformatics/cellranger/cellrangermkfastq.html)
 
-***
 **Questions before I start:**
 
 - How are Undetermined fastq files determined?
-***
-
 
 ## How does bcl2fastq2 work?
 Reference: [bcl2fastq mannual](https://sapac.support.illumina.com/content/dam/illumina-support/documents/documentation/software_documentation/bcl2fastq/bcl2fastq2-v2-20-software-guide-15051736-03.pdf)
 
-## BCL to FASTQ Conversion Process
+## BCL to FASTQ Conversion
 
 The software uses input files, which are the output of a sequencing run, to convert BCL files into FASTQ files. For each cluster that passes filter (PF), the software writes one entry to one FASTQ file for each sample in each read.
 - For a single-read run, the software creates one Read 1 FASTQ file per sample.
@@ -22,7 +19,7 @@ The software uses input files, which are the output of a sequencing run, to conv
 The sample FASTQ files are compressed and appended with the *fastq.gz extension. Thus, per-cycle BCL files are converted into per-read FASTQ files that can be used as input for data analysis.
 
 
-## Demultiplexing Process**
+## Demultiplexing
 
 Multiplexing adds a unique index adapter sequence to each sample during library prep, generating uniquely tagged libraries that can be identified and sorted for analysis. Demultiplexing then assigns clusters to a sample based on the index adapter sequence of the cluster.
 - To optimize demultiplexing results, choose index adapters that optimize color balance when performing library prep. For more information, see the Index Adapters Pooling Guide.
@@ -35,24 +32,24 @@ Depending on settings, the bcl2fastq2 Conversion Software trims adapter sequence
 - Adapter trimming—The software determines whether a read extends past the DNA insert and into the sequencing adapter. An approximate string matching algorithm identifies all or part of the adapter sequence and treats inserts and deletions (indels) as one mismatch. **Base calls matching the adapter sequence and beyond are masked or removed from the FASTQ file.**
 - UMI removal—UMIs are random k-mers attached to the genomic DNA (gDNA) before polymerase chain reaction (PCR) amplification. After the UMI is amplified with amplicons, the software can retrieve the bases and include them in the read name in the FASTQ files. When the TrimUMI sample sheet setting is active, the software can also remove the bases from the reads.
 
-***
 **To think:**
 
 - How does the fastq file look like after bcl conversion?
 [sequence construct](http://nextgen.mgh.harvard.edu/CustomPrimer.html)
-***
 
-## Commands on ERISOne:
 **Input file:** after downloading bcl files from Illumina Basespace, a series of files will be included in the downloaded file. One of them is **SampleSheet.csv**. Other files included are (based on different sequencing platforms, various file formats will be included, check on [bcl2fastq mannual](https://sapac.support.illumina.com/content/dam/illumina-support/documents/documentation/software_documentation/bcl2fastq/bcl2fastq2-v2-20-software-guide-15051736-03.pdf)):
 
 **Output of NextSeq 550:**
-![example2](OutputFilesFromSequencing.png)
+
+<p align="center">
+  <img width="75%" height="75%" src="OutputFilesFromSequencing.png">
+</p>
 
 
 **Sample Sheets:**
 A sample sheet (SampleSheet.csv) records information about samples and the corresponding index adapters. The bcl2fastq2 Conversion Software uses this information to demultiplex and convert BCL files. For most runs, a sample sheet is optional. The default location is the root output folder, but you can use the command `--sample-sheet` (bcl2fastq2, use `--csv=` to specify if using cellranger mkfastq) to specify any CSV file in any location. When a sample sheet is not provided, the software assigns all reads to the default sample Undertermined_S0.
 
-**DemultiplexingScenarios**
+**Demultiplexing Scenarios**
 
 For each sample listed in a sample sheet, the software produces one FASTQ file for each sample for each read.
 - When a sample sheet contains multiplexed samples, the software:
@@ -64,7 +61,7 @@ For each sample listed in a sample sheet, the software produces one FASTQ file f
 
 --adapter-stringency: The default value of 0.9 indicates that only reads with > 90% sequence identity with the adapter are trimmed.
 
-**FASTQ FilesDirectory**
+**FASTQ Files Directory**
 
 The software writes compressed, demultiplexed FASTQ files to the directory <run folder>\Data\Intensities\BaseCalls.
 - If a sample sheet specifies the Sample_Project column for a sample, the software places the FASTQ files for that sample in the directory <run folder>\Data\Intensities\BaseCalls\<Project>. The same project directory contains the files for multiple samples.
@@ -76,7 +73,7 @@ The software writes compressed, demultiplexed FASTQ files to the directory <run 
 For example, The default value of 0.9 (--adapter-stringency) indicates that only reads with > 90% sequence identity with the adapter are trimmed.
 
 ***
-**Summary**
+## Summary ##
 
 - cellranger mkfastq or bcl2fastq converts bcl file into FASTQ file. 
 - after conversion, FASTQ files will be splitted/assigned into two parts: sample FASTQ and undetermined FASTQ.
@@ -85,7 +82,7 @@ For example, The default value of 0.9 (--adapter-stringency) indicates that only
 - for any FASTQ file in the input, reads with > 90% sequence identity with the Adapter are trimmed. Sequenced Adapter sequences are modified to expected Adapter sequences.
 ***
 
-**Codes:**
+## Codes on ERISONE ##
 ```
 module load cellranger/3.0.2
 module load bcl2fastq2/2.19.1
