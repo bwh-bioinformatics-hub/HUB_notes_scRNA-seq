@@ -1,5 +1,16 @@
 # Monocle 3 for trajectory analysis on scRNA-seq data
 
+## What is trajectory inference?
+Trajectory inference methods interpret single-cell data as a snapshot of a continuous process. This process is reconstructed by finding paths through cellular space that minimize transcriptional changes between neighbouring cells. The ordering of cells along these paths is described by a pseudotime variable. While this variable is related to transcriptional distances from a root cell, it is often inter- preted as a proxy for developmental time. [Current best practices in single-cell RNA-seq analysis: a tutorial](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6582955/pdf/MSB-15-e8746.pdf)
+
+<p align="center">
+  <img width="75%" height="75%" src="TI_bestPractice.jpg">
+</p>
+
+Figure 7. Trajectory analysis and graph abstraction of mouse intestinal epithelium data from Haber et al (2017).
+(A) Distal and proximal enterocyte differentiation trajectories inferred by Slingshot. The Distal lineage is shown coloured by pseudotime from red to blue. Other cells in the dataset are grey. (B) Slingshot trajectories over clusters in PCA space. Clusters are abbreviated as follows: EP—enterocyte progenitors; Imm. Ent.—immature enterocytes; Mat. Ent.—mature enterocytes; Prox.—proximal; Dist.—distal. (C) Density over pseudotime for the distal enterocyte trajectory from Fig 7A. Colours represent the dominant cluster labels in each pseudotime bin. (D) Abstracted graph representation of the dataset projected onto a UMAP representation. Clusters are shown as coloured nodes. Clusters that appear in other trajectories are labelled for comparison. “TA” denotes transit amplifying cells. (E) Gene expression dynamics over pseudotime in a general enterocyte trajectory using the “GAM” R library.
+
+## What does Monocle do?
 Monocle orders single-cell expression profiles in ‘pseudotime’—a quantitative measure of progress through a biological process.
 
 Monocle 3 orders cells by their progress through differentiation rather than by the time they were collected.
@@ -18,6 +29,10 @@ The single-cell transcriptional landscape of mammalian organogenesis: [Monocle 3
 - Third, Monocle constructs a minimum spanning tree (MST) on the cells, a previously developed approach now commonly used in other single- cell settings, such as flow or mass cytometry1,13. 
 - Fourth, the algorithm finds the longest path through the MST, corresponding to the long- est sequence of transcriptionally similar cells. 
 - Finally, Monocle uses this sequence to produce a ‘trajectory’ of an individual cell’s progress through differentiation.
+
+<p align="center">
+  <img width="75%" height="75%" src="Monocle_algorithmm.jpg">
+</p>
 
 ## Minimum spanning tree (MST)
 A minimum spanning tree (MST) or minimum weight spanning tree is a subset of the edges of a connected, edge-weighted undirected graph that connects all the vertices together, without any cycles and with the minimum possible total edge weight. That is, it is a spanning tree whose sum of edge weights is as small as possible. More generally, any edge-weighted undirected graph (not necessarily connected) has a minimum spanning forest, which is a union of the minimum spanning trees for its connected components.
